@@ -1,0 +1,81 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: UserService API
+    description: |-
+        其实 google 提供了一些注解，用于生成 http 路由。
+         其他插件也可以读取这些注解，生成代码。比如可以生成自定义的 http server。
+         也可以生成 http 接口文档。比如使用 openapi 插件可以生成 openapi.yaml
+         它能直接导入到 postman 等平台中。也可以自己写插件，直接生成 web
+         页面上的接口说明。
+    version: 0.0.1
+paths:
+    /v1/user:
+        post:
+            tags:
+                - UserService
+            description: |-
+                这就是个 http 路由。google 提供了对应的注解。用来声明 http 路由。
+                 这些定义在 ../third_party/google/api/annotations.proto 中。
+            operationId: UserService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/pb.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/pb.CreateUserReply'
+components:
+    schemas:
+        pb.CreateUserReply:
+            type: object
+            properties:
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/pb.UserInfo'
+                    description: 用户信息
+            description: 创建用户接口响应格式
+        pb.CreateUserRequest:
+            type: object
+            properties:
+                userName:
+                    type: string
+                    description: 用户名
+            description: 创建用户接口请求格式
+        pb.UserInfo:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    description: |-
+                        官方建议使用 snake_case 而非 camelCase。
+                         我不知道不这样做具体会出什么麻烦，但至少会少很多麻烦。
+                         这样生成出来的字段会带有 `json:"user_id,omitemtpy"` 的 tag。
+                         用普通的 json 逻辑就不能生成正确的 json 了。 但用 protojson 就没问题。
+
+                         https://protobuf.dev/programming-guides/style/#message-field-names
+                    format: int32
+                createdAt:
+                    type: string
+                    description: |-
+                        google 提供了一些 well-known types，比如 timestamp。
+                         这个类型可以用于和 json 时间格式互转。
+                         这些类型的定义在 ../third_party/google/protobuf/timestamp.proto 中。
+                    format: date-time
+                score:
+                    type: integer
+                    description: |-
+                        对于某些需要区分 null 和 零值的字段，可以用 wrapper 类型。
+                         这些类型的定义在 ../third_party/google/protobuf/wrappers.proto 中。
+                    format: int32
+            description: 注释是可以生成到代码中的。
+tags:
+    - name: UserService
